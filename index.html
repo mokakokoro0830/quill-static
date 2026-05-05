@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quill — 会議は書かない。</title>
+<meta name="description" content="AI議事録・話者分離・アクションアイテム抽出。Zoom / Google Meet / Teams に常駐し、終わった瞬間に読めるノートが届く。">
+<meta property="og:title" content="Quill — 会議は書かない。">
+<meta property="og:description" content="AI議事録・話者分離・アクションアイテム抽出。終わった瞬間に読めるノートが届く。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Nav -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="#" class="nav__logo">
+      <span class="nav__logo-mark">◗</span>
+      <span class="nav__logo-text">Quill</span>
+    </a>
+    <nav class="nav__links">
+      <a href="#features">機能</a>
+      <a href="#how">使い方</a>
+      <a href="#pricing">料金</a>
+      <a href="#voices">ユーザー</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="#" class="nav__login">ログイン</a>
+      <a href="#cta" class="nav__cta">無料で始める</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">AI Meeting Notes · 日本語/English</p>
+    <h1 class="hero__title">
+      会議は<span class="hero__strike">書か</span>ない。
+    </h1>
+    <p class="hero__sub">
+      話して、終わって、開いたら、もうノートが書かれている。<br>
+      Quill は会議の波形をそのまま「読めるノート」へ変える AI です。
+    </p>
+    <div class="hero__cta">
+      <a href="#cta" class="btn btn--primary">無料で始める →</a>
+      <a href="#demo" class="btn btn--ghost">2分で見るデモ</a>
+    </div>
+    <p class="hero__trust">
+      クレジットカード不要 · 14日間 Pro 無料 · SOC 2 準拠
+    </p>
+
+    <!-- Waveform → Note transformation -->
+    <div class="hero-stage" aria-hidden="true">
+      <div class="hero-stage__wave">
+        <svg viewBox="0 0 600 120" preserveAspectRatio="none" class="wave-svg">
+          <path id="wave-path" d="M0,60 Q15,40 30,60 T60,60 T90,60 T120,60 T150,60 T180,60 T210,60 T240,60 T270,60 T300,60 T330,60 T360,60 T390,60 T420,60 T450,60 T480,60 T510,60 T540,60 T570,60 T600,60" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <div class="wave-bars">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="hero-stage__arrow">↓</div>
+      <div class="hero-stage__note">
+        <div class="note__head">
+          <span class="note__date">2026.05.05 · 14:00–14:42</span>
+          <span class="note__tag">Product Sync</span>
+        </div>
+        <h3 class="note__title">5月のローンチ準備、最終チェック</h3>
+        <div class="note__row">
+          <span class="note__label">参加者</span>
+          <span class="note__value">Sara · Kenji · Mei · Daniel</span>
+        </div>
+        <div class="note__section">
+          <p class="note__heading">📌 決定事項</p>
+          <ul class="note__list">
+            <li>ローンチは <strong>5月14日（火）09:00 JST</strong> に確定</li>
+            <li>料金プランは Pro = $12 で固定（チームプランは別途検討）</li>
+          </ul>
+        </div>
+        <div class="note__section">
+          <p class="note__heading">✅ アクションアイテム</p>
+          <ul class="note__list note__list--actions">
+            <li><span class="who">Kenji</span> ステージング環境のSSL設定 <span class="due">〆 5/8</span></li>
+            <li><span class="who">Mei</span> ローンチ告知メールのドラフト <span class="due">〆 5/9</span></li>
+            <li><span class="who">Sara</span> プレスキット最終確認 <span class="due">〆 5/12</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Empathy statement -->
+<section class="empathy">
+  <div class="empathy__inner">
+    <p class="empathy__lead">
+      会議の <span class="empathy__num">95%</span> は<br>
+      議事録にならずに消えていく。
+    </p>
+    <p class="empathy__sub">
+      集中して話すか、一字一句書き留めるか。<br>
+      その二択を、もう続けなくていい。
+    </p>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="features__header">
+    <span class="eyebrow">Features</span>
+    <h2 class="section-title">話したことが、そのまま整う。</h2>
+  </div>
+  <div class="features__grid">
+    <article class="feature">
+      <div class="feature__icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="16" cy="16" r="6"/><path d="M16 4v4M16 24v4M4 16h4M24 16h4"/></svg>
+      </div>
+      <h3 class="feature__title">自動文字起こし</h3>
+      <p class="feature__desc">日本語・英語をリアルタイムでテキスト化。専門用語の認識精度は業界1位。</p>
+    </article>
+    <article class="feature">
+      <div class="feature__icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="13" r="4"/><circle cx="22" cy="13" r="4"/><path d="M5 26c0-3.3 2.7-6 6-6s6 2.7 6 6M16 26c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      </div>
+      <h3 class="feature__title">話者の自動分離</h3>
+      <p class="feature__desc">声紋から発話者を識別。誰が何を言ったか、後から検索できる構造化タイムラインに。</p>
+    </article>
+    <article class="feature">
+      <div class="feature__icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8h20M6 16h20M6 24h12"/><path d="M22 22l3 3 5-5"/></svg>
+      </div>
+      <h3 class="feature__title">アクションアイテム抽出</h3>
+      <p class="feature__desc">「やる」と決まったことを、担当者と期日とセットで自動抽出。Slack・Notionへも同期。</p>
+    </article>
+    <article class="feature">
+      <div class="feature__icon">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="16" cy="16" r="11"/><path d="M5 16h22M16 5c3 4 3 18 0 22M16 5c-3 4-3 18 0 22"/></svg>
+      </div>
+      <h3 class="feature__title">多言語サマリー</h3>
+      <p class="feature__desc">英語の会議を日本語の要約で読む。逆も可能。グローバルチームの議事録を一本化。</p>
+    </article>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how" id="how">
+  <div class="how__header">
+    <span class="eyebrow">How it works</span>
+    <h2 class="section-title">3ステップで、もう議事録から解放される。</h2>
+  </div>
+  <div class="how__steps">
+    <div class="step">
+      <div class="step__num">01</div>
+      <h3 class="step__title">カレンダーに繋ぐ</h3>
+      <p class="step__desc">Google Calendar / Outlook を1クリック連携。Quill が会議の予定を自動で検出します。</p>
+    </div>
+    <div class="step">
+      <div class="step__num">02</div>
+      <h3 class="step__title">会議に集中する</h3>
+      <p class="step__desc">Zoom / Google Meet / Teams に Quill が静かに参加。あとは普段通り話すだけ。</p>
+    </div>
+    <div class="step">
+      <div class="step__num">03</div>
+      <h3 class="step__title">終わったら、もう完成</h3>
+      <p class="step__desc">退出と同時にノートが受信箱へ。決定事項・ToDo・サマリーが構造化された状態で。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Demo -->
+<section class="demo" id="demo">
+  <div class="demo__header">
+    <span class="eyebrow">Demo</span>
+    <h2 class="section-title">42分の会議、6秒で読める。</h2>
+  </div>
+  <div class="demo__inner">
+    <div class="demo__sidebar">
+      <div class="demo__sidebar-item is-active">
+        <span class="demo__sidebar-tag">Product Sync</span>
+        <span class="demo__sidebar-time">14:00 · 42分</span>
+        <span class="demo__sidebar-summary">5月のローンチ準備、最終チェック</span>
+      </div>
+      <div class="demo__sidebar-item">
+        <span class="demo__sidebar-tag">1on1 / Mei</span>
+        <span class="demo__sidebar-time">11:00 · 28分</span>
+        <span class="demo__sidebar-summary">Q3 OKRレビュー、来期の優先順位</span>
+      </div>
+      <div class="demo__sidebar-item">
+        <span class="demo__sidebar-tag">Customer Call</span>
+        <span class="demo__sidebar-time">昨日 · 51分</span>
+        <span class="demo__sidebar-summary">エンタープライズ導入の技術要件</span>
+      </div>
+      <div class="demo__sidebar-item">
+        <span class="demo__sidebar-tag">All Hands</span>
+        <span class="demo__sidebar-time">月曜 · 1h 12分</span>
+        <span class="demo__sidebar-summary">5月の全社方針共有</span>
+      </div>
+    </div>
+    <div class="demo__main">
+      <div class="demo__main-head">
+        <h3>5月のローンチ準備、最終チェック</h3>
+        <span class="demo__main-meta">2026.05.05 · 14:00–14:42 · 4名</span>
+      </div>
+      <div class="demo__main-body">
+        <div class="demo__panel">
+          <p class="demo__panel-title">📌 決定事項</p>
+          <ul>
+            <li>ローンチは <strong>5月14日（火）09:00 JST</strong> に確定</li>
+            <li>料金プランは Pro = $12 で固定</li>
+            <li>プレスリリースは Sara 主導、Kenji が技術監修</li>
+          </ul>
+        </div>
+        <div class="demo__panel">
+          <p class="demo__panel-title">✅ アクションアイテム</p>
+          <ul class="demo__panel--actions">
+            <li><span class="who">Kenji</span> ステージング環境のSSL設定 <span class="due">5/8</span></li>
+            <li><span class="who">Mei</span> ローンチ告知メールのドラフト <span class="due">5/9</span></li>
+            <li><span class="who">Sara</span> プレスキット最終確認 <span class="due">5/12</span></li>
+          </ul>
+        </div>
+        <div class="demo__panel">
+          <p class="demo__panel-title">🔑 ハイライト発言</p>
+          <blockquote>
+            <p>"プレスリリースよりも、ユーザーの最初の体験で語ってもらう方が強い。"</p>
+            <cite>— Daniel · 14:23</cite>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Integrations -->
+<section class="integrations">
+  <p class="integrations__title">使っているツールと、繋がる。</p>
+  <div class="integrations__row">
+    <span class="integration-chip">Zoom</span>
+    <span class="integration-chip">Google Meet</span>
+    <span class="integration-chip">Microsoft Teams</span>
+    <span class="integration-chip">Slack</span>
+    <span class="integration-chip">Notion</span>
+    <span class="integration-chip">Linear</span>
+    <span class="integration-chip">Asana</span>
+    <span class="integration-chip">Salesforce</span>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="pricing__header">
+    <span class="eyebrow">Pricing</span>
+    <h2 class="section-title">使った分だけ、払う。</h2>
+    <p class="pricing__sub">クレジットカード不要 · いつでも解約 · 全プラン日本語サポート</p>
+  </div>
+  <div class="pricing__grid">
+    <article class="plan">
+      <h3 class="plan__name">Free</h3>
+      <p class="plan__price"><span class="plan__amount">$0</span><span class="plan__per">/月</span></p>
+      <p class="plan__desc">まず使ってみたい個人向け</p>
+      <ul class="plan__list">
+        <li>月10時間まで録音</li>
+        <li>自動文字起こし（日/英）</li>
+        <li>基本のサマリー</li>
+        <li>30日間のノート保存</li>
+      </ul>
+      <a href="#cta" class="btn btn--ghost btn--full">始める</a>
+    </article>
+    <article class="plan plan--featured">
+      <span class="plan__badge">人気</span>
+      <h3 class="plan__name">Pro</h3>
+      <p class="plan__price"><span class="plan__amount">$12</span><span class="plan__per">/月</span></p>
+      <p class="plan__desc">毎日使うプロフェッショナル向け</p>
+      <ul class="plan__list">
+        <li>無制限の録音時間</li>
+        <li>話者分離 · アクションアイテム抽出</li>
+        <li>多言語サマリー</li>
+        <li>Slack / Notion / Linear 連携</li>
+        <li>無期限のノート保存・検索</li>
+      </ul>
+      <a href="#cta" class="btn btn--primary btn--full">14日間 無料で試す</a>
+    </article>
+    <article class="plan">
+      <h3 class="plan__name">Team</h3>
+      <p class="plan__price"><span class="plan__amount">$25</span><span class="plan__per">/ユーザー · 月</span></p>
+      <p class="plan__desc">5名以上のチーム向け</p>
+      <ul class="plan__list">
+        <li>Pro の全機能</li>
+        <li>共有ワークスペース</li>
+        <li>チーム横断検索・ダッシュボード</li>
+        <li>SSO / SAML</li>
+        <li>SOC 2 / HIPAA 準拠</li>
+        <li>専属カスタマーサクセス</li>
+      </ul>
+      <a href="#cta" class="btn btn--ghost btn--full">営業に相談</a>
+    </article>
+  </div>
+</section>
+
+<!-- Voices -->
+<section class="voices" id="voices">
+  <div class="voices__header">
+    <span class="eyebrow">User Voices</span>
+    <h2 class="section-title">毎日使っている人の声。</h2>
+  </div>
+  <div class="voices__grid">
+    <blockquote class="voice">
+      <p>"会議のあと、もう一度ZoomクラウドDLして1時間早送りして、メモして……の作業がゼロに。月の生産時間が10時間以上戻ってきた。"</p>
+      <footer>
+        <span class="voice__name">中村 美香</span>
+        <span class="voice__role">PdM · BizTech社</span>
+      </footer>
+    </blockquote>
+    <blockquote class="voice">
+      <p>"英語の会議の議事録を日本語で読めるのが革命。社内に英語が苦手なメンバーがいても、共有が一瞬で完結する。"</p>
+      <footer>
+        <span class="voice__name">Daniel Park</span>
+        <span class="voice__role">VP Engineering · Loomstack</span>
+      </footer>
+    </blockquote>
+    <blockquote class="voice">
+      <p>"Action Itemが自動でSlackに飛んでくるので、『あれ、誰がやるんだっけ?』が完全に消えた。"</p>
+      <footer>
+        <span class="voice__name">武田 健司</span>
+        <span class="voice__role">CEO · Northcraft</span>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="cta" id="cta">
+  <div class="cta__inner">
+    <h2 class="cta__title">次の会議から、書かない。</h2>
+    <p class="cta__sub">14日間 Pro 無料 · クレジットカード不要 · 2分でセットアップ</p>
+    <a href="#" class="btn btn--primary btn--lg">無料で始める →</a>
+    <p class="cta__note">企業向けの相談は <a href="#">sales@quill.example</a></p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="ft">
+  <div class="ft__inner">
+    <div class="ft__brand">
+      <span class="nav__logo-mark">◗</span>
+      <span class="ft__logo-text">Quill</span>
+      <p class="ft__tagline">Talk less. Note nothing.</p>
+    </div>
+    <div class="ft__cols">
+      <div class="ft__col">
+        <h4>製品</h4>
+        <a href="#features">機能</a>
+        <a href="#pricing">料金</a>
+        <a href="#how">使い方</a>
+        <a href="#">変更履歴</a>
+      </div>
+      <div class="ft__col">
+        <h4>会社</h4>
+        <a href="#">About</a>
+        <a href="#">採用</a>
+        <a href="#">ブログ</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+      <div class="ft__col">
+        <h4>リソース</h4>
+        <a href="#">ヘルプ</a>
+        <a href="#">API</a>
+        <a href="#">ステータス</a>
+        <a href="#">セキュリティ</a>
+      </div>
+      <div class="ft__col">
+        <h4>法務</h4>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシー</a>
+        <a href="#">SOC 2</a>
+        <a href="#">DPA</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft__bottom">
+    <span>© 2026 Quill, Inc.</span>
+    <span>Made for meetings that matter.</span>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
