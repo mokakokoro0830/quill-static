@@ -415,10 +415,14 @@ input[type="file"] {
 }
 .complete-badge.show { display: flex; }
 
+.mobile-only { display: none; }
+
 @media (max-width: 768px) {
   main { grid-template-columns: 1fr; padding: 40px 20px; }
   .left { padding-right: 0; margin-bottom: 48px; }
   .right { position: static; }
+  .mobile-only { display: block; }
+  .desktop-only { display: none; }
 }
 </style>
 </head>
@@ -438,8 +442,10 @@ input[type="file"] {
     <div class="drop-zone" id="dropZone">
       <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.txt" onchange="onFileSelect(this)">
       <span class="drop-icon">🎙️</span>
-      <p class="drop-title">音声ファイルをドロップ</p>
-      <p class="drop-sub">会議の録音データをここに置くと<br>議事録を自動生成します</p>
+      <p class="drop-title desktop-only">音声ファイルをドロップ</p>
+      <p class="drop-title mobile-only">タップしてファイルを選ぶ</p>
+      <p class="drop-sub desktop-only">会議の録音データをここに置くと<br>議事録を自動生成します</p>
+      <p class="drop-sub mobile-only">会議の録音データを選択すると<br>議事録を自動生成します</p>
       <div class="drop-types">
         <span class="drop-type">.mp3</span>
         <span class="drop-type">.wav</span>
