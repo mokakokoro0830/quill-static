@@ -90,40 +90,90 @@ h1 {
   letter-spacing: 0.04em;
 }
 
-.url-form {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 48px;
+.drop-zone {
+  border: 1.5px dashed rgba(217,201,166,0.3);
+  border-radius: 10px;
+  padding: 40px 32px;
+  text-align: center;
+  margin-bottom: 40px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
 }
-.url-input {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 12px 16px;
-  font-family: var(--mono);
-  font-size: 0.82rem;
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: rgba(217,201,166,0.7);
+  background: rgba(217,201,166,0.04);
+}
+.drop-zone.has-file {
+  border-color: rgba(217,201,166,0.6);
+  background: rgba(217,201,166,0.06);
+}
+.drop-icon {
+  font-size: 2.2rem;
+  margin-bottom: 14px;
+  display: block;
+  opacity: 0.7;
+}
+.drop-title {
+  font-size: 0.95rem;
   color: var(--text);
-  outline: none;
-  transition: border-color 0.2s;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
-.url-input::placeholder { color: var(--text-dim); }
-.url-input:focus { border-color: rgba(217,201,166,0.4); }
-.url-btn {
+.drop-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.drop-types {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.drop-type {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--gold-dim);
+  border: 1px solid rgba(217,201,166,0.2);
+  border-radius: 4px;
+  padding: 3px 10px;
+  letter-spacing: 0.08em;
+}
+.drop-btn {
   background: var(--gold);
   color: #0E0F12;
   border: none;
   border-radius: 6px;
-  padding: 12px 24px;
+  padding: 11px 28px;
   font-family: var(--sans);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
   transition: opacity 0.2s;
+  display: block;
+  margin: 0 auto;
 }
-.url-btn:hover { opacity: 0.85; }
-.url-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.drop-btn:hover { opacity: 0.85; }
+.drop-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.file-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--gold);
+  margin-top: 12px;
+  display: none;
+}
+.has-file .file-name { display: block; }
+.has-file .drop-icon { opacity: 1; }
+input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
 
 /* STEPS */
 .steps { display: flex; flex-direction: column; gap: 0; }
@@ -385,15 +435,20 @@ h1 {
     <p class="demo-label">— Interactive Demo</p>
     <h1>AIが会議に入って、<br>議事録を作る</h1>
 
-    <div class="url-form">
-      <input
-        class="url-input"
-        id="urlInput"
-        type="text"
-        placeholder="https://meet.google.com/xxx-yyy-zzz"
-        value="https://meet.google.com/demo-quill-test"
-      >
-      <button class="url-btn" id="startBtn" onclick="startDemo()">実行</button>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.txt" onchange="onFileSelect(this)">
+      <span class="drop-icon">🎙️</span>
+      <p class="drop-title">音声ファイルをドロップ</p>
+      <p class="drop-sub">会議の録音データをここに置くと<br>議事録を自動生成します</p>
+      <div class="drop-types">
+        <span class="drop-type">.mp3</span>
+        <span class="drop-type">.wav</span>
+        <span class="drop-type">.m4a</span>
+        <span class="drop-type">.mp4</span>
+        <span class="drop-type">.txt</span>
+      </div>
+      <button class="drop-btn" id="startBtn" onclick="startDemo(event)">処理を開始する</button>
+      <p class="file-name" id="fileName"></p>
     </div>
 
     <div class="complete-badge" id="completeBadge">
@@ -513,10 +568,38 @@ const steps = [
   { id: 'step5', delay: 200,  duration: 800  },
 ];
 
+// ── ドラッグ＆ドロップ ──
+const dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('drag-over');
+});
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) setFile(file);
+});
+
+function onFileSelect(input) {
+  if (input.files[0]) setFile(input.files[0]);
+}
+
+function setFile(file) {
+  dropZone.classList.add('has-file');
+  document.getElementById('fileName').textContent = `📎 ${file.name}`;
+  // ファイルが入ったら自動でデモ開始
+  startDemo();
+}
+
+// ── デモ実行 ──
 function resetDemo() {
   steps.forEach(s => {
-    const el = document.getElementById(s.id);
-    el.classList.remove('active', 'done');
+    document.getElementById(s.id).classList.remove('active', 'done');
   });
   document.getElementById('completeBadge').classList.remove('show');
   document.getElementById('outputPanel').classList.remove('visible');
@@ -524,7 +607,8 @@ function resetDemo() {
   document.getElementById('emailOutput').style.display = 'none';
 }
 
-async function startDemo() {
+async function startDemo(e) {
+  if (e) e.stopPropagation();
   if (running) return;
   running = true;
 
@@ -535,28 +619,19 @@ async function startDemo() {
   resetDemo();
   document.getElementById('outputPanel').classList.add('visible');
 
-  let totalMs = 0;
-
   for (let i = 0; i < steps.length; i++) {
     const s = steps[i];
     await sleep(s.delay);
-    totalMs += s.delay;
-
     const el = document.getElementById(s.id);
     el.classList.add('active');
-
     await sleep(s.duration);
-    totalMs += s.duration;
-
     el.classList.remove('active');
     el.classList.add('done');
   }
 
-  // show email
   document.getElementById('idleState').style.display = 'none';
   document.getElementById('emailOutput').style.display = 'block';
 
-  // update date
   const now = new Date();
   document.getElementById('emailDate').textContent =
     `${now.getFullYear()}年${String(now.getMonth()+1).padStart(2,'0')}月${String(now.getDate()).padStart(2,'0')}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} 生成`;
@@ -564,13 +639,13 @@ async function startDemo() {
   document.getElementById('completeBadge').classList.add('show');
 
   btn.disabled = false;
-  btn.textContent = 'もう一度';
+  btn.textContent = 'もう一度試す';
+  dropZone.classList.remove('has-file');
+  document.getElementById('fileName').textContent = '';
   running = false;
 }
 
-function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
