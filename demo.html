@@ -449,11 +449,11 @@ input[type="file"] {
       </div>
       <button class="drop-btn" id="startBtn" onclick="startDemo(event)">処理を開始する</button>
       <p class="file-name" id="fileName"></p>
-      <p style="margin-top:16px;font-size:0.75rem;color:var(--text-dim);">
-        ファイルがない方は
-        <a href="#" onclick="startDemo(event)" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">サンプルで試す →</a>
-      </p>
     </div>
+    <p style="margin-top:14px;font-size:0.75rem;color:var(--text-dim);text-align:center;">
+      ファイルがない方は
+      <a href="#" id="sampleLink" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">サンプルで試す →</a>
+    </p>
 
     <div class="complete-badge" id="completeBadge">
       ✅ 会議終了から <strong id="elapsed">2.1</strong>秒でメール送信完了
@@ -650,6 +650,11 @@ async function startDemo(e) {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+document.getElementById('sampleLink').addEventListener('click', e => {
+  e.preventDefault();
+  startDemo();
+});
 </script>
 </body>
 </html>
