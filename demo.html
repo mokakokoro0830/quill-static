@@ -612,7 +612,7 @@ function resetDemo() {
 }
 
 async function startDemo(e) {
-  if (e) e.stopPropagation();
+  if (e) { e.stopPropagation(); e.preventDefault(); }
   if (running) return;
   running = true;
 
