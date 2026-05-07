@@ -459,11 +459,7 @@ input[type="file"] {
       <button class="drop-btn" id="startBtn">処理を開始する</button>
       <p class="file-name" id="fileName"></p>
     </div>
-    <p style="margin-top:14px;font-size:0.75rem;color:var(--text-dim);text-align:center;">
-      ファイルがない方は
-      <a href="#" id="sampleLink" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">サンプルで試す →</a>
-    </p>
-    <p style="margin-top:10px;font-size:0.7rem;color:rgba(232,226,214,0.3);text-align:center;letter-spacing:0.04em;">
+    <p style="margin-top:14px;font-size:0.7rem;color:rgba(232,226,214,0.3);text-align:center;letter-spacing:0.04em;">
       ※ ファイルは実際には送信・処理されません。動作イメージのデモです。
     </p>
 
@@ -662,11 +658,6 @@ async function startDemo(e) {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-document.getElementById('sampleLink').addEventListener('click', e => {
-  e.preventDefault();
-  startDemo();
-});
 
 document.getElementById('startBtn').addEventListener('click', e => {
   e.preventDefault();
