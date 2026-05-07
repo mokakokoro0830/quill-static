@@ -169,10 +169,11 @@ h1 {
 .has-file .file-name { display: block; }
 .has-file .drop-icon { opacity: 1; }
 input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
+  display: none;
+}
+.drop-file-label {
   cursor: pointer;
+  display: block;
 }
 
 /* STEPS */
@@ -441,19 +442,21 @@ input[type="file"] {
 
     <div class="drop-zone" id="dropZone">
       <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.txt" onchange="onFileSelect(this)">
-      <span class="drop-icon">🎙️</span>
-      <p class="drop-title desktop-only">音声ファイルをドロップ</p>
-      <p class="drop-title mobile-only">タップしてファイルを選ぶ</p>
-      <p class="drop-sub desktop-only">会議の録音データをここに置くと<br>議事録を自動生成します</p>
-      <p class="drop-sub mobile-only">会議の録音データを選択すると<br>議事録を自動生成します</p>
-      <div class="drop-types">
-        <span class="drop-type">.mp3</span>
-        <span class="drop-type">.wav</span>
-        <span class="drop-type">.m4a</span>
-        <span class="drop-type">.mp4</span>
-        <span class="drop-type">.txt</span>
-      </div>
-      <button class="drop-btn" id="startBtn" onclick="startDemo(event)">処理を開始する</button>
+      <label for="fileInput" class="drop-file-label">
+        <span class="drop-icon">🎙️</span>
+        <p class="drop-title desktop-only">音声ファイルをドロップ</p>
+        <p class="drop-title mobile-only">タップしてファイルを選ぶ</p>
+        <p class="drop-sub desktop-only">会議の録音データをここに置くと<br>議事録を自動生成します</p>
+        <p class="drop-sub mobile-only">会議の録音データを選択すると<br>議事録を自動生成します</p>
+        <div class="drop-types">
+          <span class="drop-type">.mp3</span>
+          <span class="drop-type">.wav</span>
+          <span class="drop-type">.m4a</span>
+          <span class="drop-type">.mp4</span>
+          <span class="drop-type">.txt</span>
+        </div>
+      </label>
+      <button class="drop-btn" id="startBtn">処理を開始する</button>
       <p class="file-name" id="fileName"></p>
     </div>
     <p style="margin-top:14px;font-size:0.75rem;color:var(--text-dim);text-align:center;">
@@ -661,6 +664,11 @@ async function startDemo(e) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 document.getElementById('sampleLink').addEventListener('click', e => {
+  e.preventDefault();
+  startDemo();
+});
+
+document.getElementById('startBtn').addEventListener('click', e => {
   e.preventDefault();
   startDemo();
 });
