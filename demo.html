@@ -459,8 +459,8 @@ input[type="file"] {
       <button class="drop-btn" id="startBtn">処理を開始する</button>
       <p class="file-name" id="fileName"></p>
     </div>
-    <p style="margin-top:14px;font-size:0.7rem;color:rgba(232,226,214,0.3);text-align:center;letter-spacing:0.04em;">
-      ※ ファイルは実際には送信・処理されません。動作イメージのデモです。
+    <p style="margin-top:14px;font-size:0.7rem;color:rgba(217,201,166,0.4);text-align:center;letter-spacing:0.04em;">
+      ※ 実際にAIが処理します。初回は起動に50秒ほどかかる場合があります。
     </p>
 
     <div class="complete-badge" id="completeBadge">
@@ -469,43 +469,35 @@ input[type="file"] {
 
     <div class="steps">
       <div class="step" id="step1">
-        <div class="step-icon">🤖</div>
+        <div class="step-icon">📤</div>
         <div class="step-body">
-          <div class="step-title"><span class="spinner"></span>Bot が会議に参加</div>
-          <div class="step-desc">Playwright でブラウザを起動。<br>マイク・カメラをオフにしてサイレント参加。</div>
-          <div class="step-time">0.0s — 参加完了</div>
+          <div class="step-title"><span class="spinner"></span>音声をアップロード</div>
+          <div class="step-desc">サーバーに音声ファイルを送信しています。</div>
+          <div class="step-time" id="step1Time"></div>
         </div>
       </div>
       <div class="step" id="step2">
-        <div class="step-icon">🎙️</div>
-        <div class="step-body">
-          <div class="step-title"><span class="spinner"></span>音声を録音</div>
-          <div class="step-desc">システムの音声出力を ffmpeg で録音。<br>会議が終わるまで継続。</div>
-          <div class="step-time">会議中 — 録音継続</div>
-        </div>
-      </div>
-      <div class="step" id="step3">
         <div class="step-icon">📝</div>
         <div class="step-body">
           <div class="step-title"><span class="spinner"></span>Whisper で文字起こし</div>
-          <div class="step-desc">OpenAI Whisper API に音声を送信。<br>話者の切れ目ごとにタイムスタンプを取得。</div>
-          <div class="step-time">0.8s — 文字起こし完了</div>
+          <div class="step-desc">OpenAI Whisper API が音声をテキストに変換中。</div>
+          <div class="step-time" id="step2Time"></div>
         </div>
       </div>
-      <div class="step" id="step4">
+      <div class="step" id="step3">
         <div class="step-icon">🧠</div>
         <div class="step-body">
           <div class="step-title"><span class="spinner"></span>Claude で議事録を生成</div>
-          <div class="step-desc">3段階のプロンプトで処理。<br>決定事項・TODO・サマリーを構造化。</div>
-          <div class="step-time">1.6s — 議事録生成完了</div>
+          <div class="step-desc">3段階のプロンプトで処理。<br>決定事項・ToDo・保留事項を構造化。</div>
+          <div class="step-time" id="step3Time"></div>
         </div>
       </div>
-      <div class="step" id="step5">
-        <div class="step-icon">📨</div>
+      <div class="step" id="step4">
+        <div class="step-icon">✅</div>
         <div class="step-body">
-          <div class="step-title"><span class="spinner"></span>HTML メールで送信</div>
-          <div class="step-desc">Gmail SMTP でHTMLメールを送信。<br>会議終了から2.1秒後に着信。</div>
-          <div class="step-time">2.1s — 送信完了 ✓</div>
+          <div class="step-title"><span class="spinner"></span>議事録が完成</div>
+          <div class="step-desc">右側に議事録を表示しました。</div>
+          <div class="step-time" id="step4Time"></div>
         </div>
       </div>
     </div>
@@ -519,49 +511,17 @@ input[type="file"] {
         <p>「実行」を押すと<br>議事録の生成デモが始まります</p>
       </div>
 
-      <div id="emailOutput" style="display:none;">
+      <div id="minutesOutput" style="display:none;">
         <div class="output-topbar">
           <div class="output-topbar-dot">
             <span></span><span></span><span></span>
           </div>
-          <div class="output-topbar-title">受信トレイ — [Quill] 議事録</div>
+          <div class="output-topbar-title">Quill 📝 議事録</div>
         </div>
-        <div class="email-preview">
-          <div class="email-header">
-            <h2>Quill 📝 議事録</h2>
-            <p id="emailDate">2026年05月07日 14:32 生成</p>
-          </div>
-          <div class="email-meta">
-            <span>🕐 14:00 〜 15:00（60分0秒）</span>
-            <span>🔗 meet.google.com/demo-quill-test</span>
-          </div>
-          <div class="email-body">
-            <div class="email-section">
-              <h3>会議サマリー</h3>
-              <div class="email-summary">
-                Q3の新機能リリーススケジュールについて議論。Whisper API の精度改善を優先し、8月末までに話者識別の精度を85%以上に引き上げることで合意した。コスト試算も共有され、月1,000会議を超えたタイミングで内製化を検討する方針を確認した。
-              </div>
-            </div>
-            <div class="email-section">
-              <h3>決定事項</h3>
-              <ul class="email-list">
-                <li>話者識別の精度目標を85%以上に設定（8月末期限）</li>
-                <li>月1,000会議到達時点でWhisper内製化を検討開始</li>
-                <li>次回MTGは来週水曜14:00に固定</li>
-              </ul>
-            </div>
-            <div class="email-section">
-              <h3>TODO</h3>
-              <ul class="email-list">
-                <li>田中：話者識別のベンチマーク測定（〜5/14）</li>
-                <li>佐藤：GPU サーバーのコスト試算を更新（〜5/14）</li>
-                <li>全員：次回MTGまでに議事録レビュー</li>
-              </ul>
-            </div>
-          </div>
-          <div class="email-footer">
-            <a href="index.html" style="color:#D4AF5A;text-decoration:none;">Quill</a> が自動生成しました。
-            <span class="email-badge">2.1秒</span>
+        <div style="padding:24px;background:#fff;font-family:'Noto Serif JP',serif;">
+          <div id="minutesContent" style="font-size:0.82rem;color:#1C1C1E;line-height:2;white-space:pre-wrap;"></div>
+          <div style="margin-top:20px;padding-top:14px;border-top:1px solid #EEE;text-align:center;font-size:0.68rem;color:#999;">
+            Quill が自動生成 — <span id="elapsedTime"></span>秒
           </div>
         </div>
       </div>
@@ -570,26 +530,14 @@ input[type="file"] {
 </main>
 
 <script>
+const API_URL = 'https://quill-api-tofh.onrender.com';
 let running = false;
-
-const steps = [
-  { id: 'step1', delay: 600,  duration: 1200 },
-  { id: 'step2', delay: 300,  duration: 2000 },
-  { id: 'step3', delay: 400,  duration: 1400 },
-  { id: 'step4', delay: 300,  duration: 1600 },
-  { id: 'step5', delay: 200,  duration: 800  },
-];
+let selectedFile = null;
 
 // ── ドラッグ＆ドロップ ──
 const dropZone = document.getElementById('dropZone');
-
-dropZone.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropZone.classList.add('drag-over');
-});
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('drag-over');
-});
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => {
   e.preventDefault();
   dropZone.classList.remove('drag-over');
@@ -602,67 +550,99 @@ function onFileSelect(input) {
 }
 
 function setFile(file) {
+  selectedFile = file;
   dropZone.classList.add('has-file');
   document.getElementById('fileName').textContent = `📎 ${file.name}`;
-  // ファイルが入ったら自動でデモ開始
-  startDemo();
 }
 
-// ── デモ実行 ──
-function resetDemo() {
-  steps.forEach(s => {
-    document.getElementById(s.id).classList.remove('active', 'done');
+// ── ステップ制御 ──
+function stepActive(id) {
+  document.getElementById(id).classList.add('active');
+}
+function stepDone(id, timeText) {
+  const el = document.getElementById(id);
+  el.classList.remove('active');
+  el.classList.add('done');
+  document.getElementById(id + 'Time').textContent = timeText;
+}
+function resetSteps() {
+  ['step1','step2','step3','step4'].forEach(id => {
+    document.getElementById(id).classList.remove('active','done');
+    document.getElementById(id + 'Time').textContent = '';
   });
-  document.getElementById('completeBadge').classList.remove('show');
-  document.getElementById('outputPanel').classList.remove('visible');
-  document.getElementById('idleState').style.display = '';
-  document.getElementById('emailOutput').style.display = 'none';
 }
 
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── メイン処理 ──
 async function startDemo(e) {
   if (e) { e.stopPropagation(); e.preventDefault(); }
   if (running) return;
-  running = true;
+  if (!selectedFile) { alert('音声ファイルを選択してください'); return; }
 
+  running = true;
   const btn = document.getElementById('startBtn');
   btn.disabled = true;
   btn.textContent = '処理中…';
 
-  resetDemo();
+  resetSteps();
   document.getElementById('outputPanel').classList.add('visible');
+  document.getElementById('idleState').style.display = '';
+  document.getElementById('minutesOutput').style.display = 'none';
+  document.getElementById('completeBadge').classList.remove('show');
 
-  for (let i = 0; i < steps.length; i++) {
-    const s = steps[i];
-    await sleep(s.delay);
-    const el = document.getElementById(s.id);
-    el.classList.add('active');
-    await sleep(s.duration);
-    el.classList.remove('active');
-    el.classList.add('done');
+  const startTime = Date.now();
+
+  try {
+    // Step1: アップロード
+    stepActive('step1');
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    // Step2: 文字起こし中（APIを呼び出しつつアニメ）
+    const apiPromise = fetch(`${API_URL}/transcribe`, { method: 'POST', body: formData });
+    await sleep(1200);
+    stepDone('step1', `${((Date.now()-startTime)/1000).toFixed(1)}s — アップロード完了`);
+    stepActive('step2');
+    await sleep(1500);
+    stepDone('step2', `${((Date.now()-startTime)/1000).toFixed(1)}s — 文字起こし中`);
+
+    // Step3: Claude処理中
+    stepActive('step3');
+
+    const res = await apiPromise;
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.detail || '処理に失敗しました');
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    stepDone('step3', `${elapsed}s — 議事録生成完了`);
+    stepActive('step4');
+    await sleep(400);
+    stepDone('step4', `${elapsed}s — 完了 ✓`);
+
+    // 結果表示
+    document.getElementById('idleState').style.display = 'none';
+    document.getElementById('minutesOutput').style.display = 'block';
+    document.getElementById('minutesContent').textContent = data.minutes;
+    document.getElementById('elapsedTime').textContent = elapsed;
+    document.getElementById('completeBadge').classList.add('show');
+    document.getElementById('elapsed').textContent = elapsed;
+
+  } catch (err) {
+    alert('エラーが発生しました: ' + err.message);
+    resetSteps();
   }
-
-  document.getElementById('idleState').style.display = 'none';
-  document.getElementById('emailOutput').style.display = 'block';
-
-  const now = new Date();
-  document.getElementById('emailDate').textContent =
-    `${now.getFullYear()}年${String(now.getMonth()+1).padStart(2,'0')}月${String(now.getDate()).padStart(2,'0')}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} 生成`;
-
-  document.getElementById('completeBadge').classList.add('show');
 
   btn.disabled = false;
   btn.textContent = 'もう一度試す';
   dropZone.classList.remove('has-file');
   document.getElementById('fileName').textContent = '';
+  selectedFile = null;
   running = false;
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-document.getElementById('startBtn').addEventListener('click', e => {
-  e.preventDefault();
-  startDemo();
-});
+document.getElementById('startBtn').addEventListener('click', startDemo);
 </script>
 </body>
 </html>
