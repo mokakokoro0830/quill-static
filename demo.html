@@ -459,7 +459,12 @@ input[type="file"] {
       <button class="drop-btn" id="startBtn">処理を開始する</button>
       <p class="file-name" id="fileName"></p>
     </div>
-    <p style="margin-top:14px;font-size:0.7rem;color:rgba(217,201,166,0.4);text-align:center;letter-spacing:0.04em;">
+    <p style="margin-top:12px;text-align:center;">
+      <button onclick="loadSample()" style="background:none;border:1px solid rgba(217,201,166,0.25);color:rgba(217,201,166,0.6);font-size:0.72rem;letter-spacing:0.12em;padding:6px 18px;border-radius:2px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(217,201,166,0.6)';this.style.color='rgba(217,201,166,0.9)'" onmouseout="this.style.borderColor='rgba(217,201,166,0.25)';this.style.color='rgba(217,201,166,0.6)'">
+        サンプル音声を使う →
+      </button>
+    </p>
+    <p style="margin-top:10px;font-size:0.7rem;color:rgba(217,201,166,0.4);text-align:center;letter-spacing:0.04em;">
       ※ 実際にAIが処理します。初回は起動に50秒ほどかかる場合があります。
     </p>
 
@@ -549,7 +554,20 @@ function onFileSelect(input) {
   if (input.files[0]) setFile(input.files[0]);
 }
 
+async function loadSample() {
+  const res = await fetch('./meeting_sample.mp3');
+  const blob = await res.blob();
+  const file = new File([blob], 'meeting_sample.mp3', { type: 'audio/mpeg' });
+  setFile(file);
+}
+
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+
 function setFile(file) {
+  if (file.size > MAX_FILE_SIZE) {
+    alert('ファイルサイズは25MB以内にしてください。');
+    return;
+  }
   selectedFile = file;
   dropZone.classList.add('has-file');
   document.getElementById('fileName').textContent = `📎 ${file.name}`;
